@@ -1,12 +1,21 @@
+// app/static/js/game.js
+const background = new Image();
+background.src = "/static/img/she.png";
+
 const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas?.getContext("2d");
 
 const gridSize = 20;
-let snake = [{ x: 160, y: 160 }];
-let dx = gridSize;
-let dy = 0;
-let apple = getRandomPosition();
-let score = 0;
+let snake, dx, dy, apple, score;
+
+function initGame() {
+    snake = [{ x: 160, y: 160 }];
+    dx = gridSize;
+    dy = 0;
+    apple = getRandomPosition();
+    score = 0;
+    document.getElementById("score").textContent = "Punteggio: 0";
+}
 
 document.addEventListener("keydown", changeDirection);
 
@@ -15,7 +24,7 @@ function gameLoop() {
 
     if (checkCollision(head)) {
         alert("Game over! Hai fatto " + score + " punti.");
-        document.location.reload();
+        resetGame();
         return;
     }
 
@@ -33,7 +42,8 @@ function gameLoop() {
 }
 
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Sfondo immagine
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
     // Snake
     ctx.fillStyle = "green";
@@ -49,28 +59,16 @@ function draw() {
 function changeDirection(event) {
     switch (event.key) {
         case "ArrowUp":
-            if (dy === 0) {
-                dx = 0;
-                dy = -gridSize;
-            }
+            if (dy === 0) { dx = 0; dy = -gridSize; }
             break;
         case "ArrowDown":
-            if (dy === 0) {
-                dx = 0;
-                dy = gridSize;
-            }
+            if (dy === 0) { dx = 0; dy = gridSize; }
             break;
         case "ArrowLeft":
-            if (dx === 0) {
-                dx = -gridSize;
-                dy = 0;
-            }
+            if (dx === 0) { dx = -gridSize; dy = 0; }
             break;
         case "ArrowRight":
-            if (dx === 0) {
-                dx = gridSize;
-                dy = 0;
-            }
+            if (dx === 0) { dx = gridSize; dy = 0; }
             break;
     }
 }
@@ -89,4 +87,11 @@ function checkCollision(head) {
     );
 }
 
-setInterval(gameLoop, 100);
+function resetGame() {
+    initGame();
+}
+
+if (canvas) {
+    initGame();
+    setInterval(gameLoop, 100);
+}

@@ -1,3 +1,4 @@
+# app/game/routes.py
 from . import game
 from flask import render_template
 
